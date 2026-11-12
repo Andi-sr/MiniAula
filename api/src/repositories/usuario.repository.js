@@ -26,3 +26,24 @@ export async function buscarPorId(id) {
         ]
     });
 }
+
+export async function actualizarUsuarioPorId(id, datos) {
+
+    // Buscar al usuario en MySQL
+    const usuario = await Usuario.findByPk(id);
+    if (!usuario) {
+        return null;
+    }
+    const cambios = {};
+
+    if (datos.nombre !== undefined) {
+        cambios.nombre = datos.nombre;
+    }
+
+    if (datos.email !== undefined) {
+        cambios.email = datos.email;
+    }
+    await usuario.update(cambios);
+    return await buscarPorId(id);
+}
+
