@@ -28,7 +28,7 @@ export function errorHandler(err, req, res, next) {
       message: status === 500
         ? 'Error interno del servidor'
         : err.message,
-      details: null
+      details: status === 500 ? null : (err.details ?? null)
     }
   });
 }
