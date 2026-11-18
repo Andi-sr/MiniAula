@@ -1,0 +1,12 @@
+
+{
+  "name": "miniaula",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plataforma educativa MiniAula",
+  "scripts": {
+    "dev:api": "pnpm --filter miniaula-api dev",
+    "start:api": "pnpm --filter miniaula-api start",
+    "dev:web": "pnpm --filter miniaula-web dev"
+  }
+}
