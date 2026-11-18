@@ -1,0 +1,63 @@
+
+import {
+    crearCursoBD,
+    listarCursosPorInstructor,
+    actualizarCursoBD,
+    contarLeccionesCurso,
+    eliminarCursoBD
+} from '../repositories/curso.repository.js';
+
+import { AppError } from '../utils/app-error.js';
+
+export async function crearNuevoCurso(instructorId, datos) {
+    return await crearCursoBD({
+        titulo: datos.titulo,
+        descripcion: datos.descripcion,
+        categoria: datos.categoria,
+        nivel: datos.nivel,
+        estado: 'borrador',
+        instructorId
+    });
+}
+
+export async function obtenerMisCursos(instructorId, page, limit) {
+    const resultado = await listarCursosPorInstructor(
+        instructorId,
+        page,
+        limit
+    );
+
+    return {
+        cursos: resultado.rows,
+        total: resultado.count,
+        page,
+        limit,
+        totalPages: Math.ceil(resultado.count / limit)
+    };
+}
+
+export async function modificarCurso(curso, datos) {
+    return await actualizarCursoBD(curso, datos);
+}
+
+export async function borrarCurso(curso) {
+    if (curso.estado !== 'borrador') {
+        throw new AppError(
+            409,
+            'COURSE_NOT_DELETABLE',
+            'Solo puedes eliminar cursos en borrador'
+        );
+    }
+
+    const cantidad = await contarLeccionesCurso(curso.id);
+
+    if (cantidad > 0) {
+        throw new AppError(
+            409,
+            'COURSE_HAS_LESSONS',
+            'Elimina primero las lecciones del curso'
+        );
+    }
+
+    await eliminarCursoBD(curso);
+}
