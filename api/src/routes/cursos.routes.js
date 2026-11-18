@@ -31,6 +31,18 @@ import {
     validarCatalogoCursos
 } from '../middlewares/curso.middleware.js';
 
+
+import {
+    crearLeccion,
+    reordenarLecciones
+} from '../controllers/leccion.controller.js';
+
+import {
+    crearLeccionSchema,
+    reordenarLeccionesSchema
+} from '../validators/leccion.schemas.js';
+
+
 const router = Router();
 
 router.get(
@@ -81,5 +93,27 @@ router.delete(
     verificarPropietarioCurso,
     eliminarCurso
 );
+
+
+router.post(
+    '/:id/lecciones',
+    autenticar,
+    autorizarRoles('instructor'),
+    validarIdCurso,
+    verificarPropietarioCurso,
+    validarBody(crearLeccionSchema),
+    crearLeccion
+);
+
+router.patch(
+    '/:id/lecciones/orden',
+    autenticar,
+    autorizarRoles('instructor'),
+    validarIdCurso,
+    verificarPropietarioCurso,
+    validarBody(reordenarLeccionesSchema),
+    reordenarLecciones
+);
+
 
 export default router;
