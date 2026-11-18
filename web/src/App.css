@@ -1,0 +1,285 @@
+
+#root {
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background: #fff9fc;
+  color: #493b55;
+}
+
+/* Menú lateral */
+.sidebar {
+  width: 250px;
+  min-height: 100vh;
+  background: #ffffff;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #f1e6ef;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 45px;
+}
+
+.brand-icon {
+  font-size: 30px;
+}
+
+.brand h2 {
+  color: #a45b9c;
+  font-size: 25px;
+  margin: 0;
+  font-weight: 800;
+}
+
+.menu-label {
+  font-size: 11px;
+  color: #b6a8b8;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 0 0 15px 10px;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #827487;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.menu a:hover,
+.menu a.active {
+  background: #fce9f5;
+  color: #a34f94;
+  font-weight: 700;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 18px 12px;
+  background: #f9effb;
+  border-radius: 14px;
+  text-align: center;
+  color: #9b69a5;
+  font-size: 13px;
+}
+
+/* Contenido principal */
+.main-content {
+  flex: 1;
+  margin-left: 250px;
+  padding: 35px 45px;
+  min-width: 0;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.topbar h1 {
+  font-size: 27px;
+  margin: 0 0 8px;
+  color: #493b55;
+}
+
+.topbar p {
+  margin: 0;
+  color: #9b8da0;
+  font-size: 14px;
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  background: #f4d9ed;
+  color: #98538e;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 20px;
+}
+
+/* Bienvenida */
+.welcome-card {
+  background: linear-gradient(110deg, #f8dff0, #eee2fb);
+  border-radius: 22px;
+  padding: 35px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 230px;
+  margin-bottom: 35px;
+}
+
+.welcome-tag {
+  color: #a45b9c;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.welcome-card h2 {
+  color: #694b75;
+  font-size: 28px;
+  margin: 13px 0;
+}
+
+.welcome-card p {
+  color: #806c8b;
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+.primary-button {
+  display: inline-block;
+  background: #a45b9c;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.primary-button:hover {
+  background: #87457f;
+}
+
+.welcome-illustration {
+  font-size: 75px;
+  padding: 20px;
+}
+
+/* Secciones */
+.content-section {
+  margin-top: 25px;
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-heading h2 {
+  margin: 0 0 7px;
+  color: #57445f;
+  font-size: 21px;
+}
+
+.section-heading p {
+  margin: 0;
+  color: #a394a8;
+  font-size: 13px;
+}
+
+.section-heading a {
+  color: #a45b9c;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.empty-state {
+  background: white;
+  border: 1px solid #f1e6ef;
+  border-radius: 18px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.empty-state span {
+  font-size: 45px;
+}
+
+.empty-state h3 {
+  color: #695575;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  color: #a394a8;
+  font-size: 13px;
+}
+
+/* Adaptación a móviles */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 75px;
+    padding: 25px 10px;
+  }
+
+  .brand {
+    justify-content: center;
+  }
+
+  .brand h2,
+  .menu-label,
+  .sidebar-footer,
+  .menu a {
+    font-size: 0;
+  }
+
+  .menu a {
+    text-align: center;
+    padding: 15px 5px;
+  }
+
+  .main-content {
+    margin-left: 75px;
+    padding: 25px 15px;
+  }
+
+  .welcome-card {
+    padding: 22px;
+  }
+
+  .welcome-card h2 {
+    font-size: 22px;
+  }
+
+  .welcome-illustration {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-illustration {
+    display: none;
+  }
+
+  .topbar h1 {
+    font-size: 21px;
+  }
+
+  .main-content {
+    padding: 20px 12px;
+  }
+}
