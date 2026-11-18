@@ -24,3 +24,26 @@ export const listarCursosSchema = z.strictObject({
     page: z.coerce.number().int().positive().default(1),
     limit: z.coerce.number().int().min(1).max(100).default(10)
 });
+
+
+export const cambiarEstadoSchema = z.strictObject({
+    estado: z.enum(['publicado', 'archivado'])
+});
+
+export const catalogoCursosSchema = z.strictObject({
+    q: z.string().trim().max(150).optional(),
+
+    categoria: z.string().trim().max(100).optional(),
+
+    page: z.coerce.number()
+        .int()
+        .positive()
+        .default(1),
+
+    limit: z.coerce.number()
+        .int()
+        .min(1)
+        .max(100)
+        .default(10)
+});
+

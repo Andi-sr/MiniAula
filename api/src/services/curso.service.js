@@ -1,10 +1,12 @@
-
 import {
     crearCursoBD,
     listarCursosPorInstructor,
     actualizarCursoBD,
     contarLeccionesCurso,
-    eliminarCursoBD
+    eliminarCursoBD,
+    listarCatalogoBD,
+    buscarCursoPublicadoPorId,
+    obtenerTemarioBD
 } from '../repositories/curso.repository.js';
 
 import { AppError } from '../utils/app-error.js';
@@ -61,3 +63,56 @@ export async function borrarCurso(curso) {
 
     await eliminarCursoBD(curso);
 }
+
+
+export async function cambiarEstadoCurso(curso, estado) {
+    if (estado === 'publicado') {
+        const cantidad = await contarLeccionesCurso(curso.id);
+
+        if (cantidad === 0) {
+            throw new AppError(
+                409,
+                'COURSE_WITHOUT_LESSONS',
+                'No puedes publicar un curso sin lecciones'
+            );
+        }
+    }
+
+    return await actualizarCursoBD(curso, { estado });
+}
+
+
+export async function obtenerCatalogo(filtros) {
+    const resultado = await listarCatalogoBD(filtros);
+
+    return {
+        cursos: resultado.rows,
+        total: resultado.count,
+        page: filtros.page,
+        limit: filtros.limit,
+        totalPages: Math.ceil(
+            resultado.count / filtros.limit
+        )
+    };
+}
+
+
+export async function obtenerDetalleCurso(id) {
+    const curso = await buscarCursoPublicadoPorId(id);
+
+    if (!curso) {
+        throw new AppError(
+            404,
+            'COURSE_NOT_FOUND',
+            'El curso no existe o no está publicado'
+        );
+    }
+
+    const temario = await obtenerTemarioBD(id);
+
+    return {
+        curso,
+        temario
+    };
+}
+

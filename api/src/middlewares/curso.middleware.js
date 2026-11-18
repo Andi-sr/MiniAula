@@ -1,7 +1,7 @@
-
 import {
     cursoIdSchema,
-    listarCursosSchema
+    listarCursosSchema,
+    catalogoCursosSchema
 } from '../validators/curso.schemas.js';
 
 import { buscarCursoPorId } from '../repositories/curso.repository.js';
@@ -59,3 +59,23 @@ export async function verificarPropietarioCurso(req, res, next) {
     req.curso = curso;
     next();
 }
+
+
+export function validarCatalogoCursos(req, res, next) {
+    const resultado = catalogoCursosSchema.safeParse(
+        req.query
+    );
+
+    if (!resultado.success) {
+        throw new AppError(
+            422,
+            'VALIDATION_ERROR',
+            'Filtros del catálogo inválidos',
+            resultado.error.issues
+        );
+    }
+
+    req.filtrosCatalogo = resultado.data;
+    next();
+}
+

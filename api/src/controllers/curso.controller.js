@@ -2,8 +2,12 @@ import {
     crearNuevoCurso,
     obtenerMisCursos,
     modificarCurso,
-    borrarCurso
+    borrarCurso,
+    cambiarEstadoCurso,
+    obtenerCatalogo,
+    obtenerDetalleCurso
 } from '../services/curso.service.js';
+
 
 export async function crearCurso(req, res) {
     const curso = await crearNuevoCurso(
@@ -45,3 +49,33 @@ export async function eliminarCurso(req, res) {
     await borrarCurso(req.curso);
     return res.status(204).send();
 }
+
+
+export async function actualizarEstadoCurso(req, res) {
+    const curso = await cambiarEstadoCurso(
+        req.curso,
+        req.body.estado
+    );
+
+    return res.status(200).json({
+        mensaje: 'Estado actualizado correctamente',
+        curso
+    });
+}
+
+export async function consultarCatalogo(req, res) {
+    const resultado = await obtenerCatalogo(
+        req.filtrosCatalogo
+    );
+
+    return res.status(200).json(resultado);
+}
+
+export async function consultarDetalleCurso(req, res) {
+    const resultado = await obtenerDetalleCurso(
+        req.cursoId
+    );
+
+    return res.status(200).json(resultado);
+}
+

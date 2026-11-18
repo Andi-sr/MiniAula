@@ -4,7 +4,10 @@ import { Router } from 'express';
 import {
     crearCurso,
     editarCurso,
-    eliminarCurso
+    eliminarCurso,
+    actualizarEstadoCurso,
+    consultarCatalogo,
+    consultarDetalleCurso
 } from '../controllers/curso.controller.js';
 
 import {
@@ -12,19 +15,35 @@ import {
     autorizarRoles
 } from '../middlewares/auth.middleware.js';
 
-import { validarBody } from '../middlewares/validar.middleware.js';
+import {
+    validarBody
+} from '../middlewares/validar.middleware.js';
 
 import {
     crearCursoSchema,
-    editarCursoSchema
+    editarCursoSchema,
+    cambiarEstadoSchema
 } from '../validators/curso.schemas.js';
 
 import {
     validarIdCurso,
-    verificarPropietarioCurso
+    verificarPropietarioCurso,
+    validarCatalogoCursos
 } from '../middlewares/curso.middleware.js';
 
 const router = Router();
+
+router.get(
+    '/',
+    validarCatalogoCursos,
+    consultarCatalogo
+);
+
+router.get(
+    '/:id',
+    validarIdCurso,
+    consultarDetalleCurso
+);
 
 router.post(
     '/',
@@ -42,6 +61,16 @@ router.put(
     verificarPropietarioCurso,
     validarBody(editarCursoSchema),
     editarCurso
+);
+
+router.patch(
+    '/:id/estado',
+    autenticar,
+    autorizarRoles('instructor'),
+    validarIdCurso,
+    verificarPropietarioCurso,
+    validarBody(cambiarEstadoSchema),
+    actualizarEstadoCurso
 );
 
 router.delete(
