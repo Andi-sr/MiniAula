@@ -87,7 +87,7 @@ function Perfil() {
 
 function InstructorHome() {
   const { usuario } = useAuth()
-  return <section className="page-section"><div className="page-heading"><h1>Panel del instructor</h1><p>Bienvenido, {usuario?.nombre}. Administra tus cursos desde aquí.</p></div><div className="empty-state"><div className="empty-icon"><BookOpen size={35} /></div><h3>Tus cursos</h3><p>Próximamente podrás crear y administrar tus cursos.</p></div></section>
+  return <section className="page-section"><div className="page-heading"><h1>Panel del profesor</h1><p>Bienvenido, {usuario?.nombre}. Administra tus cursos desde aquí.</p></div><div className="empty-state"><div className="empty-icon"><BookOpen size={35} /></div><h3>Tus cursos</h3><p>Próximamente podrás crear y administrar tus cursos.</p></div></section>
 }
 
 function RutaPrivada({ children, rol }) {

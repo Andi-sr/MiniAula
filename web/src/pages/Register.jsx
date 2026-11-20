@@ -48,7 +48,6 @@ function Register() {
         </Link>
         <div className="auth-heading">
           <h1>Crea tu cuenta</h1>
-          <p>Únete a MiniAula y comienza a aprender.</p>
         </div>
         <form onSubmit={handleSubmit} className="auth-form">
           <label htmlFor="nombre">Nombre completo</label>
@@ -69,7 +68,7 @@ function Register() {
           <label htmlFor="rol">Tipo de cuenta</label>
           <select id="rol" name="rol" className="auth-select" value={formulario.rol} onChange={handleChange}>
             <option value="estudiante">Estudiante</option>
-            <option value="instructor">Instructor</option>
+            <option value="instructor">Profesor</option>
           </select>
           {error && <p className="auth-error" role="alert">{error}</p>}
           <button className="auth-submit" type="submit" disabled={enviando}>
