@@ -424,3 +424,17 @@
     font-size: 18px;
   }
 }
+.logout-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 12px;
+  padding: 8px 12px;
+  color: #a45b9c;
+  background: #fff;
+  border: 1px solid #eadfea;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
