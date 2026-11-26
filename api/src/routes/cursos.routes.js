@@ -26,6 +26,16 @@ import {
 } from '../validators/curso.schemas.js';
 
 import {
+    procesarFormularioLeccion
+} from '../middlewares/video.middleware.js';
+
+import {
+    verificarInscripcionEstudiante,
+    verificarAccesoLeccionMiddleware,
+    validarIdLeccionRuta
+} from '../middlewares/progreso.middleware.js';
+
+import {
     validarIdCurso,
     verificarPropietarioCurso,
     validarCatalogoCursos
@@ -36,6 +46,18 @@ import {
     crearLeccion,
     reordenarLecciones
 } from '../controllers/leccion.controller.js';
+
+import {
+    inscribir
+} from '../controllers/inscripcion.controller.js';
+
+import {
+    consultarProgreso,
+    consultarLeccionesProgreso,
+    consultarPorcentaje,
+    obtenerLeccion,
+    marcarCompletada
+} from '../controllers/progreso.controller.js';
 
 import {
     crearLeccionSchema,
@@ -101,7 +123,7 @@ router.post(
     autorizarRoles('instructor'),
     validarIdCurso,
     verificarPropietarioCurso,
-    validarBody(crearLeccionSchema),
+    procesarFormularioLeccion(crearLeccionSchema),
     crearLeccion
 );
 
@@ -113,6 +135,61 @@ router.patch(
     verificarPropietarioCurso,
     validarBody(reordenarLeccionesSchema),
     reordenarLecciones
+);
+
+router.post(
+    '/:id/inscripcion',
+    autenticar,
+    autorizarRoles('estudiante'),
+    validarIdCurso,
+    inscribir
+);
+
+router.get(
+    '/:id/progreso',
+    autenticar,
+    autorizarRoles('estudiante'),
+    validarIdCurso,
+    verificarInscripcionEstudiante,
+    consultarProgreso
+);
+
+router.get(
+    '/:id/progreso/lecciones',
+    autenticar,
+    autorizarRoles('estudiante'),
+    validarIdCurso,
+    verificarInscripcionEstudiante,
+    consultarLeccionesProgreso
+);
+
+router.get(
+    '/:id/progreso/porcentaje',
+    autenticar,
+    autorizarRoles('estudiante'),
+    validarIdCurso,
+    verificarInscripcionEstudiante,
+    consultarPorcentaje
+);
+
+router.get(
+    '/:id/lecciones/:leccionId',
+    autenticar,
+    autorizarRoles('estudiante'),
+    validarIdCurso,
+    validarIdLeccionRuta,
+    verificarAccesoLeccionMiddleware,
+    obtenerLeccion
+);
+
+router.post(
+    '/:id/lecciones/:leccionId/completar',
+    autenticar,
+    autorizarRoles('estudiante'),
+    validarIdCurso,
+    validarIdLeccionRuta,
+    verificarAccesoLeccionMiddleware,
+    marcarCompletada
 );
 
 
