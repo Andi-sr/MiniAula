@@ -6,7 +6,8 @@ import {
 } from '../controllers/curso.controller.js';
 
 import {
-    consultarLecciones
+    consultarLecciones,
+    consultarLeccionInstructor
 } from '../controllers/leccion.controller.js';
 
 import {
@@ -19,6 +20,14 @@ import {
     validarIdCurso,
     verificarPropietarioCurso
 } from '../middlewares/curso.middleware.js';
+
+import {
+    validarIdLeccionRuta
+} from '../middlewares/progreso.middleware.js';
+
+import {
+    verificarLeccionDelCurso
+} from '../middlewares/leccion.middleware.js';
 
 const router = Router();
 
@@ -37,6 +46,17 @@ router.get(
     validarIdCurso,
     verificarPropietarioCurso,
     consultarLecciones
+);
+
+router.get(
+    '/cursos/:id/lecciones/:leccionId',
+    autenticar,
+    autorizarRoles('instructor'),
+    validarIdCurso,
+    verificarPropietarioCurso,
+    validarIdLeccionRuta,
+    verificarLeccionDelCurso,
+    consultarLeccionInstructor
 );
 
 export default router;

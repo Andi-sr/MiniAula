@@ -36,6 +36,11 @@ const Leccion = sequelize.define(
       allowNull: true
     },
 
+    videoPath: {
+      type: DataTypes.STRING(500),
+      allowNull: true
+    },
+
     orden: {
       type: DataTypes.INTEGER,
       allowNull: false

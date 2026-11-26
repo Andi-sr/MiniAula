@@ -19,7 +19,9 @@ import {
     verificarPropietarioCurso
 } from '../middlewares/curso.middleware.js';
 
-import { validarBody } from '../middlewares/validar.middleware.js';
+import {
+    procesarFormularioLeccion
+} from '../middlewares/video.middleware.js';
 
 import {
     editarLeccionSchema
@@ -34,7 +36,7 @@ router.put(
     validarIdLeccion,
     cargarLeccion,
     verificarPropietarioCurso,
-    validarBody(editarLeccionSchema),
+    procesarFormularioLeccion(editarLeccionSchema),
     editarLeccion
 );
 

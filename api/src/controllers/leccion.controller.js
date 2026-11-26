@@ -7,15 +7,26 @@ import {
     cambiarOrdenLecciones
 } from '../services/leccion.service.js';
 
+import {
+    serializarLeccion
+} from '../utils/leccion.serializer.js';
+
 export async function crearLeccion(req, res) {
     const leccion = await crearNuevaLeccion(
         req.cursoId,
-        req.body
+        req.datosLeccion ?? req.body,
+        req.archivoVideo ?? null
     );
 
     return res.status(201).json({
         mensaje: 'Leccion creada correctamente',
         leccion
+    });
+}
+
+export async function consultarLeccionInstructor(req, res) {
+    return res.status(200).json({
+        leccion: serializarLeccion(req.leccion)
     });
 }
 
@@ -31,7 +42,8 @@ export async function editarLeccion(req, res) {
     const leccion = await modificarLeccion(
         req.cursoId,
         req.leccionId,
-        req.body
+        req.datosLeccion ?? req.body,
+        req.archivoVideo ?? null
     );
 
     return res.status(200).json({

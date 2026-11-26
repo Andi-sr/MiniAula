@@ -1,28 +1,27 @@
 import { z } from 'zod';
 
-const camposLeccion = {
+const camposTextoLeccion = {
     titulo: z.string().trim().min(3).max(150),
 
-    contenido: z.string().trim().min(1),
-
-    videoUrl: z.string()
-        .trim()
-        .max(500)
-        .url()
-        .refine(url => /^https?:\/\//i.test(url), {
-            message: 'El video debe tener una URL HTTP o HTTPS'
-        })
-        .nullable()
-        .optional()
+    contenido: z.string().trim().min(1)
 };
 
+const videoPathSchema = z.preprocess(
+    valor => valor === '' || valor === 'null' ? null : valor,
+    z.null().optional()
+);
+
 export const crearLeccionSchema = z.strictObject({
-    ...camposLeccion,
-    tipo: z.literal('contenido').default('contenido')
+    ...camposTextoLeccion,
+    tipo: z.literal('contenido').default('contenido'),
+    videoPath: videoPathSchema
 });
 
 export const editarLeccionSchema = z
-    .strictObject(camposLeccion)
+    .strictObject({
+        ...camposTextoLeccion,
+        videoPath: videoPathSchema
+    })
     .partial()
     .refine(
         datos => Object.keys(datos).length > 0,
@@ -31,6 +30,10 @@ export const editarLeccionSchema = z
 
 export const leccionIdSchema = z.strictObject({
     id: z.coerce.number().int().positive()
+});
+
+export const leccionRutaSchema = z.object({
+    leccionId: z.coerce.number().int().positive()
 });
 
 export const reordenarLeccionesSchema = z.strictObject({

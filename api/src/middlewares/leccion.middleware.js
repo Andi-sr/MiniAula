@@ -23,6 +23,24 @@ export function validarIdLeccion(req, res, next) {
     next();
 }
 
+export async function verificarLeccionDelCurso(req, res, next) {
+    const leccion = await buscarLeccionPorId(req.leccionId);
+
+    if (
+        !leccion ||
+        Number(leccion.cursoId) !== Number(req.cursoId)
+    ) {
+        throw new AppError(
+            404,
+            'LESSON_NOT_FOUND',
+            'La leccion no existe en este curso'
+        );
+    }
+
+    req.leccion = leccion;
+    next();
+}
+
 export async function cargarLeccion(req, res, next) {
     const leccion = await buscarLeccionPorId(req.leccionId);
 
