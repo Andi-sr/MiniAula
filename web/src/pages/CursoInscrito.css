@@ -1,0 +1,282 @@
+
+.curso-inscrito-page {
+  width: 100%;
+  padding-bottom: 35px;
+  color: #493b55;
+}
+
+.curso-inscrito-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 25px;
+  color: #a45b9c;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.curso-inscrito-volver:hover {
+  color: #87457f;
+}
+
+.curso-inscrito-portada {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 38px;
+  border-radius: 24px;
+  background: linear-gradient(115deg, #f8dff0, #eee2fb);
+  margin-bottom: 30px;
+}
+
+.curso-inscrito-icono {
+  min-width: 125px;
+  height: 125px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.65);
+  color: #a45b9c;
+}
+
+.curso-inscrito-portada span {
+  display: inline-block;
+  padding: 7px 14px;
+  border-radius: 20px;
+  background: white;
+  color: #a45b9c;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.curso-inscrito-portada h1 {
+  margin: 0 0 12px;
+  font-size: 30px;
+}
+
+.curso-inscrito-portada p {
+  margin: 0;
+  line-height: 1.7;
+  color: #806f89;
+}
+
+.curso-inscrito-contenido {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 310px;
+  gap: 25px;
+  align-items: start;
+}
+
+.curso-inscrito-panel {
+  background: white;
+  border: 1px solid #f0e2ee;
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 8px 25px rgba(80, 50, 80, 0.04);
+}
+
+.curso-inscrito-panel h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 15px;
+  font-size: 21px;
+}
+
+.curso-inscrito-panel h2 svg {
+  color: #a45b9c;
+}
+
+.curso-inscrito-intro {
+  color: #8c7891;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.curso-inscrito-lecciones {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.curso-inscrito-leccion {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 17px;
+  border: 1px solid #f0e2ee;
+  border-radius: 15px;
+  background: white;
+}
+
+.curso-inscrito-numero {
+  width: 43px;
+  height: 43px;
+  min-width: 43px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  background: #f9e9f6;
+  color: #a45b9c;
+  font-weight: 600;
+}
+
+.curso-inscrito-leccion-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.curso-inscrito-leccion-info h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.curso-inscrito-leccion-info span {
+  color: #9a879f;
+  font-size: 13px;
+}
+
+.curso-inscrito-estado-leccion {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.curso-inscrito-estado-leccion.completada {
+  color: #26996b;
+}
+
+.curso-inscrito-estado-leccion.actual {
+  color: #a45b9c;
+}
+
+.curso-inscrito-estado-leccion.bloqueada {
+  color: #a49aa7;
+}
+
+.curso-inscrito-leccion.actual {
+  border-color: #d9b2d4;
+  background: #fffaff;
+}
+
+.curso-inscrito-leccion.completada .curso-inscrito-numero {
+  background: #e8f7ef;
+  color: #26996b;
+}
+
+.curso-inscrito-lateral .curso-inscrito-panel {
+  text-align: center;
+}
+
+.curso-inscrito-progreso-icono {
+  width: 75px;
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  border-radius: 20px;
+  background: #f9e9f6;
+  color: #a45b9c;
+}
+
+.curso-inscrito-lateral h2 {
+  justify-content: center;
+}
+
+.curso-inscrito-porcentaje {
+  display: block;
+  margin: 18px 0;
+  font-size: 32px;
+  color: #a45b9c;
+}
+
+.curso-inscrito-barra {
+  width: 100%;
+  height: 10px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #f3e5f1;
+}
+
+.curso-inscrito-barra-valor {
+  height: 100%;
+  border-radius: 20px;
+  background: #a45b9c;
+  transition: width 0.3s ease;
+}
+
+.curso-inscrito-lateral p {
+  color: #8c7891;
+  font-size: 14px;
+  margin: 15px 0;
+}
+
+.curso-inscrito-instructor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 17px;
+  margin-top: 17px;
+  border-top: 1px solid #f0e2ee;
+  color: #806f89;
+}
+
+.curso-inscrito-vacio,
+.curso-inscrito-estado {
+  padding: 35px;
+  text-align: center;
+  color: #8c7891;
+}
+
+.curso-inscrito-estado a {
+  display: inline-block;
+  margin-top: 15px;
+  color: #a45b9c;
+}
+
+.curso-inscrito-error svg {
+  color: #c45b75;
+}
+
+@media (max-width: 900px) {
+  .curso-inscrito-contenido {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .curso-inscrito-portada {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 25px;
+  }
+
+  .curso-inscrito-portada h1 {
+    font-size: 24px;
+  }
+
+  .curso-inscrito-icono {
+    width: 90px;
+    min-width: 90px;
+    height: 90px;
+  }
+
+  .curso-inscrito-panel {
+    padding: 20px;
+  }
+
+  .curso-inscrito-leccion {
+    flex-wrap: wrap;
+  }
+
+  .curso-inscrito-estado-leccion {
+    width: 100%;
+    padding-left: 59px;
+  }
+}

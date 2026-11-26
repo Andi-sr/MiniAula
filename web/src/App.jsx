@@ -1,6 +1,14 @@
 
 import { useEffect, useState } from 'react'
-import { NavLink, Routes, Route, Navigate, useLocation, Link } from 'react-router-dom'
+import {
+  NavLink,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+  Link
+} from 'react-router-dom'
+
 import {
   GraduationCap,
   House,
@@ -22,6 +30,7 @@ import Login from './pages/login'
 import Register from './pages/Register'
 import Catalogo from './pages/Catalogo'
 import CursoDetalle from './pages/CursoDetalle'
+import CursoInscrito from './pages/CursoInscrito'
 import './App.css'
 
 function Sidebar() {
@@ -233,7 +242,10 @@ function MisCursos() {
             const porcentaje = Number(progreso?.porcentaje || 0)
 
             return (
-              <article className="curso-card" key={inscripcion.inscripcionId}>
+              <article
+                className="curso-card"
+                key={inscripcion.inscripcionId}
+              >
                 <div className="curso-card-imagen">
                   <BookOpen size={38} />
                 </div>
@@ -275,7 +287,7 @@ function MisCursos() {
                   </p>
 
                   <Link
-                    to={`/cursos/${curso.id}`}
+                    to={`/mis-cursos/${curso.id}`}
                     className="curso-ver-detalle"
                   >
                     <PlayCircle size={17} />
@@ -440,6 +452,17 @@ function App() {
           <RutaPrivada rol="estudiante">
             <Panel>
               <MisCursos />
+            </Panel>
+          </RutaPrivada>
+        }
+      />
+
+      <Route
+        path="/mis-cursos/:id"
+        element={
+          <RutaPrivada rol="estudiante">
+            <Panel>
+              <CursoInscrito />
             </Panel>
           </RutaPrivada>
         }
