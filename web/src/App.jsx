@@ -17,6 +17,7 @@ import { useAuth } from './context/AuthContext'
 import Login from './pages/login'
 import Register from './pages/Register'
 import Catalogo from './pages/Catalogo'
+import CursoDetalle from './pages/CursoDetalle'
 import './App.css'
 
 function Sidebar() {
@@ -302,6 +303,17 @@ function App() {
           <RutaPrivada rol="estudiante">
             <Panel>
               <Catalogo />
+            </Panel>
+          </RutaPrivada>
+        }
+      />
+
+      <Route
+        path="/cursos/:id"
+        element={
+          <RutaPrivada rol="estudiante">
+            <Panel>
+              <CursoDetalle />
             </Panel>
           </RutaPrivada>
         }
