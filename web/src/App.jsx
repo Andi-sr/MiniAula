@@ -21,7 +21,8 @@ import {
   Search,
   LogOut,
   CheckCircle,
-  PlayCircle
+  PlayCircle,
+  BookMarked
 } from 'lucide-react'
 
 import { useAuth } from './context/AuthContext'
@@ -90,12 +91,49 @@ function Sidebar() {
 function Inicio() {
   const { usuario } = useAuth()
 
+  const [cursos, setCursos] = useState([])
+  const [cargando, setCargando] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    const cargarResumen = async () => {
+      try {
+        setCargando(true)
+        setError('')
+
+        const respuesta = await api.get('/inscripciones/mis-cursos')
+
+        setCursos(respuesta.data.cursos || [])
+      } catch (err) {
+        setError(
+          err.response?.data?.mensaje ||
+          err.response?.data?.message ||
+          'No se pudo cargar tu resumen de aprendizaje.'
+        )
+      } finally {
+        setCargando(false)
+      }
+    }
+
+    cargarResumen()
+  }, [])
+
+  const totalCursos = cursos.length
+
+  const totalCompletadas = cursos.reduce(
+    (total, inscripcion) =>
+      total + Number(inscripcion.progreso?.leccionesCompletadas || 0),
+    0
+  )
+
+  const cursosRecientes = cursos.slice(0, 2)
+
   return (
     <>
       <header className="topbar">
         <div>
           <h1>¡Hola, {usuario?.nombre || 'bienvenido'}!</h1>
-          <p>¿Listo para aprender algo nuevo hoy?</p>
+          <p>¿Qué aprenderemos hoy?</p>
         </div>
 
         <div className="topbar-actions">
@@ -135,11 +173,33 @@ function Inicio() {
         </div>
       </section>
 
-      <section className="content-section">
+      <section className="inicio-resumen">
+        <article className="inicio-resumen-card">
+          <div className="inicio-resumen-icono">
+            <BookOpen size={25} />
+          </div>
+          <div>
+            <strong>{cargando ? '...' : totalCursos}</strong>
+            <span>Cursos inscritos</span>
+          </div>
+        </article>
+
+        <article className="inicio-resumen-card">
+          <div className="inicio-resumen-icono">
+            <CheckCircle size={25} />
+          </div>
+          <div>
+            <strong>{cargando ? '...' : totalCompletadas}</strong>
+            <span>Lecciones completadas</span>
+          </div>
+        </article>
+      </section>
+
+      <section className="content-section inicio-cursos-section">
         <div className="section-heading">
           <div>
-            <h2>Mis clases</h2>
-            <p>Continúa aprendiendo a tu propio ritmo.</p>
+            <h2>Continúa aprendiendo</h2>
+            <p>Retoma tus cursos y sigue avanzando.</p>
           </div>
 
           <NavLink to="/mis-cursos">
@@ -148,22 +208,109 @@ function Inicio() {
           </NavLink>
         </div>
 
-        <div className="empty-state">
-          <div className="empty-icon">
-            <BookOpen size={35} />
+        {cargando ? (
+          <div className="empty-state">
+            <p>Cargando tus cursos...</p>
           </div>
+        ) : error ? (
+          <div className="empty-state">
+            <BookOpen size={35} />
+            <h3>No pudimos cargar tus cursos</h3>
+            <p>{error}</p>
+          </div>
+        ) : cursos.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-icon">
+              <BookOpen size={35} />
+            </div>
 
-          <h3>Tus clases aparecerán aquí</h3>
+            <h3>¡Comienza tu aprendizaje!</h3>
 
+            <p>
+              Todavía no estás inscrito en ningún curso.
+              Explora nuestro catálogo y encuentra uno que te guste.
+            </p>
+
+            <NavLink to="/catalogo" className="secondary-button">
+              Explorar catálogo
+            </NavLink>
+          </div>
+        ) : (
+          <div className="inicio-cursos-grid">
+            {cursosRecientes.map((inscripcion) => {
+              const curso = inscripcion.curso
+              const progreso = inscripcion.progreso
+              const porcentaje = Number(progreso?.porcentaje || 0)
+
+              return (
+                <article
+                  className="inicio-curso-card"
+                  key={inscripcion.inscripcionId}
+                >
+                  <div className="inicio-curso-icono">
+                    <BookMarked size={30} />
+                  </div>
+
+                  <div className="inicio-curso-datos">
+                    <span className="curso-categoria">
+                      {curso.categoria || 'General'}
+                    </span>
+
+                    <h3>{curso.titulo}</h3>
+
+                    <p>
+                      {curso.descripcion ||
+                        'Continúa avanzando en este curso.'}
+                    </p>
+
+                    <div className="inicio-curso-progreso">
+                      <div className="progreso-info">
+                        <span>Mi progreso</span>
+                        <strong>{porcentaje}%</strong>
+                      </div>
+
+                      <div className="progreso-barra">
+                        <div
+                          className="progreso-barra-valor"
+                          style={{
+                            width: `${Math.min(100, Math.max(0, porcentaje))}%`
+                          }}
+                        />
+                      </div>
+
+                      <span className="inicio-curso-lecciones">
+                        {progreso?.leccionesCompletadas || 0} de{' '}
+                        {progreso?.totalLecciones || 0} lecciones completadas
+                      </span>
+                    </div>
+
+                    <Link
+                      to={`/mis-cursos/${curso.id}`}
+                      className="inicio-continuar"
+                    >
+                      <PlayCircle size={17} />
+                      Continuar aprendiendo
+                    </Link>
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+        )}
+      </section>
+
+      <section className="inicio-catalogo-banner">
+        <div>
+          <h2>¿Quieres aprender algo nuevo?</h2>
           <p>
-            Cuando te inscribas en un curso, podrás acceder a tus lecciones
-            y consultar tu progreso.
+            Descubre cursos de Matemáticas, Lenguaje y Ciencias Naturales.
           </p>
-
-          <NavLink to="/catalogo" className="secondary-button">
-            Explorar catálogo
-          </NavLink>
         </div>
+
+        <NavLink to="/catalogo" className="secondary-button">
+          Ver catálogo
+          <ArrowRight size={16} />
+        </NavLink>
       </section>
     </>
   )
