@@ -32,6 +32,7 @@ import Register from './pages/Register'
 import Catalogo from './pages/Catalogo'
 import CursoDetalle from './pages/CursoDetalle'
 import CursoInscrito from './pages/CursoInscrito'
+import LeccionAprendizaje from './pages/LeccionAprendizaje'
 import './App.css'
 
 function Sidebar() {
@@ -610,6 +611,18 @@ function App() {
           <RutaPrivada rol="estudiante">
             <Panel>
               <CursoInscrito />
+            </Panel>
+          </RutaPrivada>
+        }
+      />
+
+      {/* Nueva ruta para abrir una lección */}
+      <Route
+        path="/mis-cursos/:id/lecciones/:leccionId"
+        element={
+          <RutaPrivada rol="estudiante">
+            <Panel>
+              <LeccionAprendizaje />
             </Panel>
           </RutaPrivada>
         }

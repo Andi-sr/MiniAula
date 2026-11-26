@@ -110,6 +110,27 @@
   background: white;
 }
 
+/* Enlaces de las lecciones disponibles y completadas */
+.curso-leccion-enlace {
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.curso-leccion-enlace:hover {
+  border-color: #a45b9c;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(164, 91, 156, 0.10);
+}
+
+.curso-leccion-enlace:focus-visible {
+  outline: 2px solid #a45b9c;
+  outline-offset: 3px;
+}
+
 .curso-inscrito-numero {
   width: 43px;
   height: 43px;

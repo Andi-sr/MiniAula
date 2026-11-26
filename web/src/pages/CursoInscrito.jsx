@@ -80,6 +80,7 @@ function CursoInscrito() {
   const { curso, progreso, temario = [] } = datos
 
   const porcentaje = Number(progreso?.porcentaje || 0)
+
   const completadas = temario.filter(
     (leccion) => leccion.estado === 'completada'
   ).length
@@ -146,11 +147,8 @@ function CursoInscrito() {
                 {temario.map((leccion, index) => {
                   const estado = obtenerEstado(leccion.estado)
 
-                  return (
-                    <article
-                      className={`curso-inscrito-leccion ${estado.clase}`}
-                      key={leccion.id}
-                    >
+                  const contenidoLeccion = (
+                    <>
                       <div className="curso-inscrito-numero">
                         {leccion.orden || index + 1}
                       </div>
@@ -175,6 +173,30 @@ function CursoInscrito() {
 
                         <span>{estado.texto}</span>
                       </div>
+                    </>
+                  )
+
+                  if (
+                    leccion.estado === 'actual' ||
+                    leccion.estado === 'completada'
+                  ) {
+                    return (
+                      <Link
+                        to={`/mis-cursos/${id}/lecciones/${leccion.id}`}
+                        className={`curso-inscrito-leccion ${estado.clase} curso-leccion-enlace`}
+                        key={leccion.id}
+                      >
+                        {contenidoLeccion}
+                      </Link>
+                    )
+                  }
+
+                  return (
+                    <article
+                      className={`curso-inscrito-leccion ${estado.clase}`}
+                      key={leccion.id}
+                    >
+                      {contenidoLeccion}
                     </article>
                   )
                 })}
