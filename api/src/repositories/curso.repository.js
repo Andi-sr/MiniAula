@@ -1,12 +1,12 @@
-import { Curso, Leccion } from '../models/index.js';
+import { Curso, Leccion, Usuario } from '../models/index.js';
 import { Op } from 'sequelize';
 
 export async function crearCursoBD(datos) {
     return await Curso.create(datos);
 }
 
-export async function buscarCursoPorId(id) {
-    return await Curso.findByPk(id);
+export async function buscarCursoPorId(id, transaction) {
+    return await Curso.findByPk(id, { transaction });
 }
 
 export async function listarCursosPorInstructor(
@@ -80,6 +80,18 @@ export async function buscarCursoPublicadoPorId(id) {
             id,
             estado: 'publicado'
         }
+    });
+}
+
+export async function buscarCursoConInstructor(id) {
+    return await Curso.findByPk(id, {
+        include: [
+            {
+                model: Usuario,
+                as: 'instructor',
+                attributes: ['id', 'nombre', 'email']
+            }
+        ]
     });
 }
 

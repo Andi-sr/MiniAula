@@ -16,7 +16,7 @@ export const editarCursoSchema = camposCurso
         { message: 'Debes enviar al menos un campo' }
     );
 
-export const cursoIdSchema = z.strictObject({
+export const cursoIdSchema = z.object({
     id: z.coerce.number().int().positive()
 });
 
