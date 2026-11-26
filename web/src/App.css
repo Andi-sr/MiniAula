@@ -438,3 +438,40 @@
   font-size: 12px;
   cursor: pointer;
 }
+.mis-cursos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.progreso-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  color: #493b55;
+}
+
+.progreso-barra {
+  width: 100%;
+  height: 9px;
+  background: #f3e5f1;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+
+.progreso-barra-valor {
+  height: 100%;
+  background: #a45b9c;
+  border-radius: 20px;
+  transition: width 0.3s ease;
+}
+
+.progreso-lecciones {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8c7891;
+  font-size: 14px;
+}

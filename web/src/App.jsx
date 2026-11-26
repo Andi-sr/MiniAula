@@ -1,5 +1,6 @@
 
-import { NavLink, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { NavLink, Routes, Route, Navigate, useLocation, Link } from 'react-router-dom'
 import {
   GraduationCap,
   House,
@@ -10,10 +11,13 @@ import {
   ArrowRight,
   Bell,
   Search,
-  LogOut
+  LogOut,
+  CheckCircle,
+  PlayCircle
 } from 'lucide-react'
 
 import { useAuth } from './context/AuthContext'
+import api from './services/api'
 import Login from './pages/login'
 import Register from './pages/Register'
 import Catalogo from './pages/Catalogo'
@@ -157,21 +161,132 @@ function Inicio() {
 }
 
 function MisCursos() {
+  const [cursos, setCursos] = useState([])
+  const [cargando, setCargando] = useState(true)
+  const [error, setError] = useState('')
+
+  const cargarCursos = async () => {
+    try {
+      setCargando(true)
+      setError('')
+
+      const respuesta = await api.get('/inscripciones/mis-cursos')
+
+      setCursos(respuesta.data.cursos || [])
+    } catch (err) {
+      setError(
+        err.response?.data?.mensaje ||
+        err.response?.data?.message ||
+        'No se pudieron cargar tus cursos.'
+      )
+    } finally {
+      setCargando(false)
+    }
+  }
+
+  useEffect(() => {
+    cargarCursos()
+  }, [])
+
   return (
     <section className="page-section">
       <div className="page-heading">
         <h1>Mis clases</h1>
-        <p>Consulta y continúa tus cursos inscritos.</p>
+        <p>Consulta tus cursos inscritos y continúa aprendiendo.</p>
       </div>
 
-      <div className="empty-state">
-        <div className="empty-icon">
-          <BookOpen size={35} />
+      {cargando ? (
+        <div className="empty-state">
+          <p>Cargando tus cursos...</p>
         </div>
+      ) : error ? (
+        <div className="empty-state">
+          <BookOpen size={35} />
+          <h3>No pudimos cargar tus clases</h3>
+          <p>{error}</p>
 
-        <h3>Aún no tienes clases</h3>
-        <p>Cuando te inscribas en un curso, aparecerá aquí.</p>
-      </div>
+          <button
+            className="secondary-button"
+            onClick={cargarCursos}
+          >
+            Intentar nuevamente
+          </button>
+        </div>
+      ) : cursos.length === 0 ? (
+        <div className="empty-state">
+          <div className="empty-icon">
+            <BookOpen size={35} />
+          </div>
+
+          <h3>Aún no tienes clases</h3>
+          <p>Cuando te inscribas en un curso, aparecerá aquí.</p>
+
+          <Link to="/catalogo" className="secondary-button">
+            Explorar catálogo
+          </Link>
+        </div>
+      ) : (
+        <div className="mis-cursos-grid">
+          {cursos.map((inscripcion) => {
+            const curso = inscripcion.curso
+            const progreso = inscripcion.progreso
+            const porcentaje = Number(progreso?.porcentaje || 0)
+
+            return (
+              <article className="curso-card" key={inscripcion.inscripcionId}>
+                <div className="curso-card-imagen">
+                  <BookOpen size={38} />
+                </div>
+
+                <div className="curso-card-contenido">
+                  <span className="curso-categoria">
+                    {curso.categoria || 'General'}
+                  </span>
+
+                  <h3>{curso.titulo}</h3>
+
+                  <p className="curso-descripcion">
+                    {curso.descripcion}
+                  </p>
+
+                  <p>
+                    <GraduationCap size={16} />
+                    {curso.instructor?.nombre || 'Instructor de MiniAula'}
+                  </p>
+
+                  <div className="progreso-info">
+                    <span>Mi progreso</span>
+                    <strong>{porcentaje}%</strong>
+                  </div>
+
+                  <div className="progreso-barra">
+                    <div
+                      className="progreso-barra-valor"
+                      style={{
+                        width: `${Math.min(100, Math.max(0, porcentaje))}%`
+                      }}
+                    />
+                  </div>
+
+                  <p className="progreso-lecciones">
+                    <CheckCircle size={16} />
+                    {progreso?.leccionesCompletadas || 0} de{' '}
+                    {progreso?.totalLecciones || 0} lecciones completadas
+                  </p>
+
+                  <Link
+                    to={`/cursos/${curso.id}`}
+                    className="curso-ver-detalle"
+                  >
+                    <PlayCircle size={17} />
+                    Continuar aprendiendo
+                  </Link>
+                </div>
+              </article>
+            )
+          })}
+        </div>
+      )}
     </section>
   )
 }
