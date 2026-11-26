@@ -11,6 +11,10 @@
 **/.env.*
 !**/.env.example
 
+# Videos subidos por usuarios
+api/uploads/videos/*
+!api/uploads/videos/.gitkeep
+
 # Archivos temporales
 *.log
 .DS_Store

@@ -12,6 +12,10 @@ import {
 
 const app = express();
 
+if (process.env.TRUST_PROXY) {
+  app.set('trust proxy', Number(process.env.TRUST_PROXY) || 1);
+}
+
 app.use(corsMiddleware);
 
 // Procesar solicitudes en formato JSON

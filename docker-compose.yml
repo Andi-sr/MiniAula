@@ -1,0 +1,83 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: miniaula-db
+    restart: unless-stopped
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-miniaula}
+      MYSQL_USER: ${DB_USER:-miniaula_app}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD en el archivo .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Defina MYSQL_ROOT_PASSWORD en el archivo .env}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=\"$$MYSQL_ROOT_PASSWORD\" mysqladmin ping -h 127.0.0.1 -u root --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    networks:
+      - miniaula-net
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: miniaula-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: ${PORT:-3000}
+      NODE_ENV: ${NODE_ENV:-production}
+      TRUST_PROXY: ${TRUST_PROXY:-1}
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-miniaula}
+      DB_USER: ${DB_USER:-miniaula_app}
+      DB_PASSWORD: ${DB_PASSWORD:?Defina DB_PASSWORD en el archivo .env}
+      JWT_SECRET: ${JWT_SECRET:?Defina JWT_SECRET en el archivo .env}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-2h}
+      WEB_ORIGIN: ${WEB_ORIGIN:-http://localhost:8080}
+      VIDEO_UPLOAD_DIR: uploads/videos
+      VIDEO_MAX_SIZE_MB: ${VIDEO_MAX_SIZE_MB:-100}
+    ports:
+      - "${PORT:-3000}:${PORT:-3000}"
+    volumes:
+      - video_data:/app/api/uploads/videos
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:' + (process.env.PORT || 3000) + '/api/health').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+    networks:
+      - miniaula-net
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-/api}
+    container_name: miniaula-web
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    networks:
+      - miniaula-net
+
+volumes:
+  mysql_data:
+    name: miniaula_mysql_data
+  video_data:
+    name: miniaula_video_data
+
+networks:
+  miniaula-net:
+    driver: bridge
