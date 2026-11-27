@@ -1,0 +1,55 @@
+.perfil-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.perfil-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 380px;
+  margin: 25px auto 0;
+  text-align: left;
+}
+
+.perfil-form label {
+  margin-top: 7px;
+  color: #65566d;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.perfil-mensaje {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 9px;
+  font-size: 12px;
+}
+
+.perfil-mensaje.exito {
+  background: #edf9f2;
+  color: #24875b;
+}
+
+.perfil-mensaje.error {
+  background: #fff0f1;
+  color: #b94b61;
+}
+
+.perfil-valores {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+@media (max-width: 480px) {
+  .perfil-form {
+    max-width: 100%;
+  }
+}

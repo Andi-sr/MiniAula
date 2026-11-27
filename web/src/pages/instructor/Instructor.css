@@ -1,0 +1,267 @@
+@import '../Auth.css';
+@import '../estudiante/Catalogo.css';
+
+.instructor-encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.instructor-encabezado .page-heading {
+  margin-bottom: 0;
+}
+
+.instructor-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.instructor-mensaje {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 20px;
+  padding: 10px 14px;
+  border-radius: 9px;
+  font-size: 12px;
+}
+
+.instructor-mensaje.error {
+  background: #fff0f1;
+  color: #b94b61;
+}
+
+.instructor-mensaje.exito {
+  background: #edf9f2;
+  color: #24875b;
+}
+
+.instructor-estado {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.instructor-estado.borrador {
+  background: #f8e8f5;
+  color: #a45b9c;
+}
+
+.instructor-estado.publicado {
+  background: #edf9f2;
+  color: #24875b;
+}
+
+.instructor-estado.archivado {
+  background: #f3e5f1;
+  color: #76677d;
+}
+
+.instructor-curso-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+  color: #8c7891;
+  font-size: 12px;
+}
+
+.instructor-boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 12px;
+  border: 1px solid #eadfea;
+  border-radius: 9px;
+  background: #fff;
+  color: #a45b9c;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.instructor-boton:hover {
+  background: #fce9f5;
+  border-color: #e8cce4;
+}
+
+.instructor-boton.primario {
+  background: #a45b9c;
+  border-color: #a45b9c;
+  color: #fff;
+}
+
+.instructor-boton.primario:hover {
+  background: #87457f;
+  border-color: #87457f;
+}
+
+.instructor-boton.peligro {
+  color: #b94b61;
+}
+
+.instructor-boton.peligro:hover {
+  background: #fff0f1;
+  border-color: #f1d4dc;
+}
+
+.instructor-boton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.instructor-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(73, 59, 85, 0.35);
+}
+
+.instructor-modal {
+  width: min(100%, 430px);
+  padding: 30px;
+  background: #fff;
+  border: 1px solid #f1e6ef;
+  border-radius: 18px;
+  text-align: center;
+}
+
+.instructor-modal h3 {
+  margin: 12px 0 8px;
+  color: #695575;
+  font-size: 17px;
+}
+
+.instructor-modal p {
+  margin: 0 auto 20px;
+  color: #a394a8;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.instructor-modal-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.instructor-modal-acciones button.primary-button {
+  border: 0;
+}
+
+.instructor-video-modal {
+  width: min(100%, 720px);
+}
+
+.instructor-video {
+  width: 100%;
+  max-height: 60vh;
+  margin: 15px 0;
+  background: #493b55;
+  border-radius: 12px;
+}
+
+.instructor-form-card {
+  max-width: 720px;
+  padding: 30px;
+  background: #fff;
+  border: 1px solid #f1e6ef;
+  border-radius: 18px;
+}
+
+.instructor-form-card h2 {
+  margin: 0 0 8px;
+  color: #493b55;
+  font-size: 20px;
+}
+
+.instructor-form-card > p {
+  margin: 0 0 25px;
+  color: #a394a8;
+  font-size: 13px;
+}
+
+.instructor-form-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.auth-textarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 12px 14px;
+  color: #493b55;
+  background: #fff;
+  border: 1px solid #eadfea;
+  border-radius: 10px;
+  outline: none;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.auth-textarea::placeholder {
+  color: #a99eae;
+}
+
+.auth-textarea:focus {
+  border-color: #b875ad;
+  box-shadow: 0 0 0 3px #f8e8f5;
+}
+
+.instructor-ayuda {
+  margin: -3px 0 5px;
+  color: #a394a8;
+  font-size: 12px;
+}
+
+.secondary-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .instructor-encabezado {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .instructor-form-card {
+    padding: 20px;
+  }
+
+  .instructor-modal {
+    padding: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .instructor-acciones {
+    width: 100%;
+  }
+
+  .instructor-acciones .instructor-boton {
+    flex: 1;
+  }
+
+  .instructor-form-card {
+    padding: 18px;
+  }
+
+  .instructor-modal-acciones button {
+    width: 100%;
+  }
+}

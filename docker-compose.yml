@@ -19,6 +19,8 @@ services:
       start_period: 30s
     networks:
       - miniaula-net
+    ports:
+      - "127.0.0.1:3307:3306"
 
   api:
     build:

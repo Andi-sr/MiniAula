@@ -1,8 +1,10 @@
-
 import { useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { GraduationCap, UserRound, Mail, Lock, ArrowRight } from 'lucide-react'
+
 import { useAuth } from '../context/AuthContext'
+import { interpretarError } from '../services/errores'
+import ErrorMessage from '../components/ErrorMessage'
 import './Auth.css'
 
 function Register() {
@@ -14,7 +16,7 @@ function Register() {
     password: '',
     rol: 'estudiante'
   })
-  const [error, setError] = useState('')
+  const [errorInfo, setErrorInfo] = useState(null)
   const [enviando, setEnviando] = useState(false)
 
   if (cargando) return <div className="auth-loading">Cargando...</div>
@@ -22,18 +24,19 @@ function Register() {
 
   const handleChange = (e) => {
     setFormulario({ ...formulario, [e.target.name]: e.target.value })
+    setErrorInfo(null)
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setError('')
+    setErrorInfo(null)
     setEnviando(true)
 
     try {
       const data = await registrar(formulario)
       navigate(data.usuario.rol === 'instructor' ? '/instructor' : '/', { replace: true })
     } catch (err) {
-      setError(err.response?.data?.error?.message || 'No se pudo completar el registro.')
+      setErrorInfo(interpretarError(err, 'registro'))
     } finally {
       setEnviando(false)
     }
@@ -50,6 +53,8 @@ function Register() {
           <h1>Crea tu cuenta</h1>
         </div>
         <form onSubmit={handleSubmit} className="auth-form">
+          <ErrorMessage {...errorInfo} variante="auth" />
+
           <label htmlFor="nombre">Nombre completo</label>
           <div className="auth-input">
             <UserRound size={19} />
@@ -70,7 +75,6 @@ function Register() {
             <option value="estudiante">Estudiante</option>
             <option value="instructor">Profesor</option>
           </select>
-          {error && <p className="auth-error" role="alert">{error}</p>}
           <button className="auth-submit" type="submit" disabled={enviando}>
             {enviando ? 'Creando cuenta...' : 'Crear cuenta'}
             {!enviando && <ArrowRight size={18} />}
@@ -81,8 +85,8 @@ function Register() {
       <aside className="auth-aside">
         <div className="auth-aside-content">
           <GraduationCap size={58} strokeWidth={1.3} />
-          <h2>Tu aprendizaje comienza aquí</h2>
-          <p>Forma parte de una comunidad educativa donde cada lección cuenta.</p>
+          <h2>Aprender abre nuevas posibilidades</h2>
+          <p>Explora tus cursos, aprende a tu ritmo y descubre todo lo que puedes lograr.</p>
         </div>
       </aside>
     </main>

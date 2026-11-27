@@ -1,0 +1,95 @@
+.error-message {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+  padding: 12px 14px;
+  color: #b94b61;
+  background: #fff0f1;
+  border: 1px solid #f2d7dd;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.error-message-cabecera {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+}
+
+.error-message-cabecera svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.error-message-cabecera strong {
+  display: block;
+  color: #93384f;
+  font-size: 13px;
+}
+
+.error-message-cabecera p {
+  margin: 3px 0 0;
+}
+
+.error-message-detalles {
+  margin: 0;
+  padding-left: 30px;
+  list-style: disc;
+}
+
+.error-message-campo {
+  font-weight: 700;
+}
+
+.error-message-codigo {
+  align-self: flex-start;
+  padding: 3px 8px;
+  color: #9b6f79;
+  background: #fff;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+.error-message-reintento {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 7px 12px;
+  color: #93384f;
+  background: #fff;
+  border: 1px solid #eadfea;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.error-message-reintento:hover:not(:disabled) {
+  background: #fff8fa;
+}
+
+.error-message-reintento:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.error-message--auth,
+.error-message--perfil,
+.error-message--detalle {
+  margin: 10px 0;
+  padding: 10px 12px;
+}
+
+@media (max-width: 480px) {
+  .error-message {
+    padding: 10px 12px;
+  }
+
+  .error-message-detalles {
+    padding-left: 22px;
+  }
+}

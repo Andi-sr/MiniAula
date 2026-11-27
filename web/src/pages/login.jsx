@@ -1,15 +1,17 @@
-
 import { useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { GraduationCap, Mail, Lock, ArrowRight } from 'lucide-react'
+
 import { useAuth } from '../context/AuthContext'
+import { interpretarError } from '../services/errores'
+import ErrorMessage from '../components/ErrorMessage'
 import './Auth.css'
 
 function Login() {
   const { iniciarSesion, autenticado, usuario, cargando } = useAuth()
   const navigate = useNavigate()
   const [formulario, setFormulario] = useState({ email: '', password: '' })
-  const [error, setError] = useState('')
+  const [errorInfo, setErrorInfo] = useState(null)
   const [enviando, setEnviando] = useState(false)
 
   if (cargando) return <div className="auth-loading">Cargando...</div>
@@ -17,18 +19,19 @@ function Login() {
 
   const handleChange = (e) => {
     setFormulario({ ...formulario, [e.target.name]: e.target.value })
+    setErrorInfo(null)
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setError('')
+    setErrorInfo(null)
     setEnviando(true)
 
     try {
       const data = await iniciarSesion(formulario)
       navigate(data.usuario.rol === 'instructor' ? '/instructor' : '/', { replace: true })
     } catch (err) {
-      setError(err.response?.data?.error?.message || 'No se pudo iniciar sesión. Verifica tus datos.')
+      setErrorInfo(interpretarError(err, 'login'))
     } finally {
       setEnviando(false)
     }
@@ -46,6 +49,8 @@ function Login() {
           <p>Ingresa a tu cuenta para continuar aprendiendo.</p>
         </div>
         <form onSubmit={handleSubmit} className="auth-form">
+          <ErrorMessage {...errorInfo} variante="auth" />
+
           <label htmlFor="email">Correo electrónico</label>
           <div className="auth-input">
             <Mail size={19} />
@@ -56,7 +61,6 @@ function Login() {
             <Lock size={19} />
             <input id="password" name="password" type="password" placeholder="Ingresa tu contraseña" value={formulario.password} onChange={handleChange} required />
           </div>
-          {error && <p className="auth-error" role="alert">{error}</p>}
           <button className="auth-submit" type="submit" disabled={enviando}>
             {enviando ? 'Ingresando...' : 'Iniciar sesión'}
             {!enviando && <ArrowRight size={18} />}

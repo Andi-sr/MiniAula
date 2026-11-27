@@ -1,0 +1,85 @@
+.instructor-resultados {
+  display: block;
+}
+
+.instructor-filtro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.filtro-estados {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 5px;
+  border: 1px solid #eadfea;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.filtro-estados button {
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #806f89;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.filtro-estados button:hover {
+  background: #f8e8f5;
+  color: #a45b9c;
+}
+
+.filtro-estados button.activo {
+  background: #a45b9c;
+  color: #fff;
+}
+
+.catalogo-visible {
+  color: #93869a;
+  font-size: 13px;
+  margin: 0;
+}
+
+.instructor-curso-card {
+  overflow: visible;
+}
+
+.instructor-curso-card .curso-card-contenido h3 {
+  overflow: visible;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.instructor-curso-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #f3edf3;
+}
+
+@media (max-width: 480px) {
+  .instructor-filtro {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filtro-estados {
+    width: 100%;
+    border-radius: 14px;
+  }
+
+  .filtro-estados button {
+    flex: 1 1 calc(50% - 5px);
+    padding: 8px 10px;
+  }
+}

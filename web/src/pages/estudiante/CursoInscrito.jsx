@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
@@ -11,37 +10,61 @@ import {
   AlertCircle
 } from 'lucide-react'
 
-import api from '../services/api'
+import api from '../../services/api'
+import { interpretarError, esSesionExpirada } from '../../services/errores'
+import ErrorMessage from '../../components/ErrorMessage'
+import { useAuth } from '../../context/AuthContext'
 import './CursoInscrito.css'
+
+const ESTADOS_PROGRESO = {
+  sin_lecciones: 'Sin lecciones',
+  sin_iniciar: 'Sin iniciar',
+  en_progreso: 'En progreso',
+  completado: 'Completado'
+}
+
+function obtenerEstadoProgreso(estado) {
+  if (!estado) return ''
+  return ESTADOS_PROGRESO[estado] || estado
+}
 
 function CursoInscrito() {
   const { id } = useParams()
+  const { cerrarSesion } = useAuth()
 
   const [datos, setDatos] = useState(null)
   const [cargando, setCargando] = useState(true)
-  const [error, setError] = useState('')
+  const [errorInfo, setErrorInfo] = useState(null)
+  const [intento, setIntento] = useState(0)
 
   useEffect(() => {
     const cargarCurso = async () => {
       try {
         setCargando(true)
-        setError('')
+        setErrorInfo(null)
 
         const respuesta = await api.get(`/inscripciones/cursos/${id}`)
         setDatos(respuesta.data)
       } catch (err) {
-        setError(
-          err.response?.data?.mensaje ||
-          err.response?.data?.message ||
-          'No se pudo cargar el contenido del curso.'
-        )
+        if (esSesionExpirada(err)) {
+          cerrarSesion()
+          return
+        }
+
+        setErrorInfo(interpretarError(err, 'carga'))
       } finally {
         setCargando(false)
       }
     }
 
     cargarCurso()
-  }, [id])
+  }, [cerrarSesion, id, intento])
+
+  const reintentar = () => {
+    setCargando(true)
+    setErrorInfo(null)
+    setIntento((valor) => valor + 1)
+  }
 
   if (cargando) {
     return (
@@ -53,14 +76,19 @@ function CursoInscrito() {
     )
   }
 
-  if (error) {
+  if (errorInfo) {
     return (
       <section className="curso-inscrito-page">
         <div className="curso-inscrito-estado curso-inscrito-error">
           <AlertCircle size={35} />
           <h2>No pudimos abrir el curso</h2>
-          <p>{error}</p>
-          <Link to="/mis-cursos">Volver a mis clases</Link>
+
+          <ErrorMessage
+            {...errorInfo}
+            onRetry={errorInfo.puedeReintentar ? reintentar : undefined}
+          />
+
+          <Link to="/mis-cursos">Volver a Mis cursos</Link>
         </div>
       </section>
     )
@@ -71,7 +99,7 @@ function CursoInscrito() {
       <section className="curso-inscrito-page">
         <div className="curso-inscrito-estado">
           No se encontró la información del curso.
-          <Link to="/mis-cursos">Volver a mis clases</Link>
+          <Link to="/mis-cursos">Volver a Mis cursos</Link>
         </div>
       </section>
     )
@@ -80,10 +108,13 @@ function CursoInscrito() {
   const { curso, progreso, temario = [] } = datos
 
   const porcentaje = Number(progreso?.porcentaje || 0)
+  const completadas = Number(progreso?.leccionesCompletadas || 0)
+  const totalLecciones = Number(progreso?.totalLecciones || 0)
+  const estadoProgreso = obtenerEstadoProgreso(progreso?.estado)
 
-  const completadas = temario.filter(
-    (leccion) => leccion.estado === 'completada'
-  ).length
+  const temarioOrdenado = [...temario].sort(
+    (a, b) => Number(a.orden || 0) - Number(b.orden || 0)
+  )
 
   const obtenerEstado = (estado) => {
     if (estado === 'completada') {
@@ -108,9 +139,13 @@ function CursoInscrito() {
 
   return (
     <section className="curso-inscrito-page">
-      <Link to="/mis-cursos" className="curso-inscrito-volver">
+      <Link
+        to="/mis-cursos"
+        className="curso-inscrito-volver"
+        aria-label="Volver a Mis cursos"
+      >
         <ArrowLeft size={18} />
-        Volver a mis clases
+        Volver a Mis cursos
       </Link>
 
       <header className="curso-inscrito-portada">
@@ -119,7 +154,7 @@ function CursoInscrito() {
         </div>
 
         <div>
-          <span>{curso.categoria || 'Curso de MiniAula'}</span>
+          {curso.categoria && <span>{curso.categoria}</span>}
           <h1>{curso.titulo}</h1>
           <p>{curso.descripcion}</p>
         </div>
@@ -138,13 +173,13 @@ function CursoInscrito() {
               Completa cada lección para avanzar a la siguiente.
             </p>
 
-            {temario.length === 0 ? (
+            {temarioOrdenado.length === 0 ? (
               <div className="curso-inscrito-vacio">
                 Todavía no hay lecciones disponibles en este curso.
               </div>
             ) : (
               <div className="curso-inscrito-lecciones">
-                {temario.map((leccion, index) => {
+                {temarioOrdenado.map((leccion, index) => {
                   const estado = obtenerEstado(leccion.estado)
 
                   const contenidoLeccion = (
@@ -227,15 +262,21 @@ function CursoInscrito() {
             </div>
 
             <p>
-              {completadas} de {temario.length} lecciones completadas
+              {completadas} de {totalLecciones} lecciones completadas
             </p>
 
-            <div className="curso-inscrito-instructor">
-              <GraduationCap size={19} />
-              <span>
-                {curso.instructor?.nombre || 'Instructor de MiniAula'}
-              </span>
-            </div>
+            {estadoProgreso && <p>Estado: {estadoProgreso}</p>}
+
+            {progreso?.leccionActual?.titulo && (
+              <p>Lección actual: {progreso.leccionActual.titulo}</p>
+            )}
+
+            {curso.instructor?.nombre && (
+              <div className="curso-inscrito-instructor">
+                <GraduationCap size={19} />
+                <span>Instructor: {curso.instructor.nombre}</span>
+              </div>
+            )}
           </div>
         </aside>
       </div>

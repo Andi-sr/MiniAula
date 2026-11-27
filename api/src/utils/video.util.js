@@ -9,6 +9,8 @@ import {
     asegurarDirectorioVideo
 } from '../config/uploads.js';
 
+import { AppError } from './app-error.js';
+
 const NOMBRE_VIDEO_SEGURO =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}-[A-Za-z0-9._-]{1,80}\.(mp4|webm|mov)$/i;
 
@@ -99,14 +101,28 @@ export function validarContenidoVideo(buffer, mimeType, nombreOriginal) {
 }
 
 export function generarNombreVideo(nombreOriginal) {
-    const base = path
-        .basename(nombreOriginal || 'video')
+    const nombreLimpio = String(nombreOriginal || 'video')
+        .replace(/\\/g, '/')
+        .split('/')
+        .pop();
+
+    const extension = path.extname(nombreLimpio).toLowerCase();
+
+    if (!VIDEO_EXTENSIONS.has(extension)) {
+        throw new AppError(
+            415,
+            'INVALID_VIDEO_FORMAT',
+            'Solo se permiten videos MP4, WebM o MOV'
+        );
+    }
+
+    const baseSegura = nombreLimpio
+        .slice(0, nombreLimpio.length - extension.length)
         .replace(/[^A-Za-z0-9._-]/g, '_')
         .replace(/^\.+/, '')
-        .slice(0, 80);
+        .slice(0, 80) || 'video';
 
-    const nombreBase = base || 'video';
-    return `${crypto.randomUUID()}-${nombreBase}`;
+    return `${crypto.randomUUID()}-${baseSegura}${extension}`;
 }
 
 export function esNombreVideoSeguro(nombre) {
@@ -141,13 +157,26 @@ export function rutaAbsolutaSegura(rutaRelativa) {
 
 export async function guardarVideoEnDisco(buffer, nombre) {
     if (!esNombreVideoSeguro(nombre)) {
-        throw new Error('Nombre de video no válido');
+        throw new AppError(
+            422,
+            'INVALID_VIDEO_NAME',
+            'El nombre del video no es válido'
+        );
     }
 
     asegurarDirectorioVideo();
 
     const destino = path.join(VIDEO_DIRECTORY, nombre);
-    await fs.promises.writeFile(destino, buffer, { flag: 'wx' });
+
+    try {
+        await fs.promises.writeFile(destino, buffer, { flag: 'wx' });
+    } catch (error) {
+        if (error.code !== 'EEXIST') {
+            await fs.promises.unlink(destino).catch(() => {});
+        }
+
+        throw error;
+    }
 
     return destino;
 }

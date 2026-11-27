@@ -35,6 +35,15 @@ function comprobarCurso(curso) {
     }
 }
 
+function tieneArchivoVideoValido(archivoVideo) {
+    return Boolean(
+        archivoVideo &&
+        Buffer.isBuffer(archivoVideo.buffer) &&
+        archivoVideo.buffer.length > 0 &&
+        typeof archivoVideo.formato === 'string'
+    );
+}
+
 function comprobarLeccion(leccion, cursoId) {
     if (!leccion || Number(leccion.cursoId) !== Number(cursoId)) {
         throw new AppError(
@@ -72,7 +81,7 @@ export async function crearNuevaLeccion(
     datos,
     archivoVideo = null
 ) {
-    const video = archivoVideo
+    const video = tieneArchivoVideoValido(archivoVideo)
         ? await guardarVideoNuevo(archivoVideo)
         : null;
 
@@ -126,7 +135,7 @@ export async function modificarLeccion(
     datos,
     archivoVideo = null
 ) {
-    const video = archivoVideo
+    const video = tieneArchivoVideoValido(archivoVideo)
         ? await guardarVideoNuevo(archivoVideo)
         : null;
 

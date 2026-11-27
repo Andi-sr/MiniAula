@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
@@ -10,7 +9,8 @@ import {
   Filter
 } from 'lucide-react'
 
-import useCursos from '../hooks/useCursos'
+import useCursos from '../../hooks/useCursos'
+import ErrorMessage from '../../components/ErrorMessage'
 import './Catalogo.css'
 
 function Catalogo() {
@@ -20,10 +20,11 @@ function Catalogo() {
     pagina,
     totalPaginas,
     cargando,
-    error,
+    errorInfo,
     buscarCursos,
     cambiarPagina,
-    recargar
+    recargar,
+    limpiarError
   } = useCursos()
 
   const [busqueda, setBusqueda] = useState('')
@@ -61,7 +62,10 @@ function Catalogo() {
             type="text"
             placeholder="Buscar un curso..."
             value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
+            onChange={(e) => {
+              setBusqueda(e.target.value)
+              limpiarError()
+            }}
           />
         </div>
 
@@ -72,7 +76,10 @@ function Catalogo() {
             type="text"
             placeholder="Filtrar por categoría..."
             value={categoria}
-            onChange={(e) => setCategoria(e.target.value)}
+            onChange={(e) => {
+              setCategoria(e.target.value)
+              limpiarError()
+            }}
           />
         </div>
 
@@ -98,20 +105,16 @@ function Catalogo() {
           <p>Cargando cursos...</p>
         </div>
 
-      ) : error ? (
+      ) : errorInfo ? (
 
         <div className="catalogo-estado catalogo-error">
           <BookOpen size={35} />
           <h3>No se pudieron cargar los cursos</h3>
-          <p>{error}</p>
 
-          <button
-            type="button"
-            className="catalogo-boton"
-            onClick={recargar}
-          >
-            Intentar nuevamente
-          </button>
+          <ErrorMessage
+            {...errorInfo}
+            onRetry={errorInfo.puedeReintentar ? recargar : undefined}
+          />
         </div>
 
       ) : cursos.length === 0 ? (
@@ -136,22 +139,23 @@ function Catalogo() {
 
                 <div className="curso-card-contenido">
 
-                  <span className="curso-categoria">
-                    {curso.categoria || 'General'}
-                  </span>
+                  {curso.categoria && (
+                    <span className="curso-categoria">
+                      {curso.categoria}
+                    </span>
+                  )}
 
                   <h3>{curso.titulo}</h3>
 
-                  <p className="curso-descripcion">
-                    {curso.descripcion ||
-                      'Descubre todo lo que aprenderás en este curso.'}
-                  </p>
+                  {curso.descripcion && (
+                    <p className="curso-descripcion">{curso.descripcion}</p>
+                  )}
 
                   <div className="curso-card-pie">
 
-                    <span className="curso-nivel">
-                      {curso.nivel || 'Nivel general'}
-                    </span>
+                    {curso.nivel && (
+                      <span className="curso-nivel">{curso.nivel}</span>
+                    )}
 
                     <Link
                       to={`/cursos/${curso.id}`}

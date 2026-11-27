@@ -1,0 +1,46 @@
+.instructor-archivo {
+  overflow: hidden;
+}
+
+.instructor-archivo input[type='file'] {
+  width: 100%;
+  min-width: 0;
+  color: #8c7891;
+  font-size: 12px;
+}
+
+.instructor-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #65566d;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.instructor-video-actual {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  background: #fff9fc;
+  border: 1px solid #f1e6ef;
+  border-radius: 12px;
+  color: #8c7891;
+  font-size: 13px;
+}
+
+.instructor-nombre-archivo {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .instructor-video-actual {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

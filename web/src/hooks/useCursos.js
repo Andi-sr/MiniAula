@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import api from '../services/api'
+import { interpretarError } from '../services/errores'
 
 const useCursos = () => {
   const [cursos, setCursos] = useState([])
@@ -11,54 +12,82 @@ const useCursos = () => {
   const [categoria, setCategoria] = useState('')
 
   const [cargando, setCargando] = useState(true)
-  const [error, setError] = useState('')
+  const [errorInfo, setErrorInfo] = useState(null)
 
-  const obtenerCursos = useCallback(async () => {
-    try {
-      setCargando(true)
-      setError('')
-
-      const respuesta = await api.get('/cursos', {
-        params: {
-          q: busqueda.trim() || undefined,
-          categoria: categoria.trim() || undefined,
-          page: pagina,
-          limit: 9
-        }
-      })
-
-      setCursos(respuesta.data.cursos || [])
-      setTotal(respuesta.data.total || 0)
-      setTotalPaginas(respuesta.data.totalPages || 1)
-    } catch (err) {
-      setCursos([])
-      setTotal(0)
-      setTotalPaginas(1)
-
-      setError(
-        err.response?.data?.error?.message ||
-        'No se pudieron cargar los cursos. Intenta nuevamente.'
-      )
-    } finally {
-      setCargando(false)
+  const pedirCursos = useCallback(() => api.get('/cursos', {
+    params: {
+      q: busqueda.trim() || undefined,
+      categoria: categoria.trim() || undefined,
+      page: pagina,
+      limit: 9
     }
-  }, [busqueda, categoria, pagina])
+  }), [busqueda, categoria, pagina])
+
+  const aplicarCursos = useCallback((respuesta) => {
+    setCursos(respuesta.data.cursos || [])
+    setTotal(respuesta.data.total || 0)
+    setTotalPaginas(respuesta.data.totalPages || 1)
+    setErrorInfo(null)
+  }, [])
+
+  const aplicarError = useCallback((err) => {
+    setCursos([])
+    setTotal(0)
+    setTotalPaginas(1)
+    setErrorInfo(interpretarError(err, 'carga'))
+  }, [])
+
+  const finalizarCarga = useCallback(() => setCargando(false), [])
+
+  const ejecutarCarga = useCallback(
+    () => pedirCursos()
+      .then(aplicarCursos)
+      .catch(aplicarError)
+      .finally(finalizarCarga),
+    [pedirCursos, aplicarCursos, aplicarError, finalizarCarga]
+  )
 
   useEffect(() => {
-    obtenerCursos()
-  }, [obtenerCursos])
+    ejecutarCarga()
+  }, [ejecutarCarga])
+
+  const iniciarCarga = useCallback(() => {
+    setCargando(true)
+    setErrorInfo(null)
+  }, [])
 
   const buscarCursos = (nuevaBusqueda, nuevaCategoria) => {
+    if (
+      nuevaBusqueda === busqueda &&
+      nuevaCategoria === categoria &&
+      pagina === 1
+    ) {
+      return
+    }
+
+    iniciarCarga()
     setPagina(1)
     setBusqueda(nuevaBusqueda)
     setCategoria(nuevaCategoria)
   }
 
   const cambiarPagina = (nuevaPagina) => {
-    if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
+    if (
+      nuevaPagina >= 1 &&
+      nuevaPagina <= totalPaginas &&
+      nuevaPagina !== pagina
+    ) {
+      iniciarCarga()
       setPagina(nuevaPagina)
     }
   }
+
+  const recargar = useCallback(() => {
+    iniciarCarga()
+    return ejecutarCarga()
+  }, [iniciarCarga, ejecutarCarga])
+
+  const limpiarError = useCallback(() => setErrorInfo(null), [])
 
   return {
     cursos,
@@ -68,10 +97,12 @@ const useCursos = () => {
     busqueda,
     categoria,
     cargando,
-    error,
+    error: errorInfo?.mensaje || '',
+    errorInfo,
     buscarCursos,
     cambiarPagina,
-    recargar: obtenerCursos
+    recargar,
+    limpiarError
   }
 }
 

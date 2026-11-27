@@ -1,6 +1,5 @@
-
-import { useEffect, useState } from 'react'
-import { Link, useParams, useNavigate } from 'react-router-dom'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import {
   BookOpen,
   GraduationCap,
@@ -10,12 +9,15 @@ import {
   UserRound
 } from 'lucide-react'
 
-import api from '../services/api'
+import api from '../../services/api'
+import { interpretarError, esSesionExpirada } from '../../services/errores'
+import ErrorMessage from '../../components/ErrorMessage'
+import { useAuth } from '../../context/AuthContext'
 import './CursoDetalle.css'
 
 function CursoDetalle() {
   const { id } = useParams()
-  const navigate = useNavigate()
+  const { cerrarSesion } = useAuth()
 
   const [curso, setCurso] = useState(null)
   const [temario, setTemario] = useState([])
@@ -23,41 +25,71 @@ function CursoDetalle() {
 
   const [cargando, setCargando] = useState(true)
   const [inscribiendo, setInscribiendo] = useState(false)
-  const [error, setError] = useState('')
+  const [errorInfo, setErrorInfo] = useState(null)
+  const [errorEstado, setErrorEstado] = useState(null)
   const [mensaje, setMensaje] = useState('')
+  const [intento, setIntento] = useState(0)
+  const inscribiendoRef = useRef(false)
+
+  const cargarCurso = useCallback(async () => {
+    try {
+      setCargando(true)
+      setErrorInfo(null)
+      setErrorEstado(null)
+      setCurso(null)
+      setTemario([])
+      setInscrito(false)
+
+      const respuestaCurso = await api.get(`/cursos/${id}`)
+
+      setCurso(respuestaCurso.data.curso)
+      setTemario(respuestaCurso.data.temario || [])
+
+      try {
+        const respuestaInscripcion =
+          await api.get(`/inscripciones/cursos/${id}/estado`)
+
+        setInscrito(Boolean(respuestaInscripcion.data.inscrito))
+      } catch (errEstado) {
+        if (esSesionExpirada(errEstado)) {
+          cerrarSesion()
+          return
+        }
+
+        setInscrito(false)
+        setErrorEstado(interpretarError(errEstado, 'carga'))
+      }
+    } catch (err) {
+      if (esSesionExpirada(err)) {
+        cerrarSesion()
+        return
+      }
+
+      setErrorInfo(interpretarError(err, 'carga'))
+    } finally {
+      setCargando(false)
+    }
+  }, [cerrarSesion, id])
 
   useEffect(() => {
-    const cargarCurso = async () => {
-      try {
-        setCargando(true)
-        setError('')
+    Promise.resolve().then(() => cargarCurso())
+  }, [cargarCurso, intento])
 
-        const [respuestaCurso, respuestaInscripcion] =
-          await Promise.all([
-            api.get(`/cursos/${id}`),
-            api.get(`/inscripciones/cursos/${id}/estado`)
-          ])
-
-        setCurso(respuestaCurso.data.curso)
-        setTemario(respuestaCurso.data.temario || [])
-        setInscrito(respuestaInscripcion.data.inscrito)
-      } catch (err) {
-        setError(
-          err.response?.data?.error?.message ||
-          'No se pudo cargar la información del curso.'
-        )
-      } finally {
-        setCargando(false)
-      }
-    }
-
-    cargarCurso()
-  }, [id])
+  const reintentarCarga = () => {
+    setCargando(true)
+    setErrorInfo(null)
+    setErrorEstado(null)
+    setIntento((valor) => valor + 1)
+  }
 
   const manejarInscripcion = async () => {
+    if (inscribiendoRef.current || inscrito) return
+
     try {
+      inscribiendoRef.current = true
       setInscribiendo(true)
-      setError('')
+      setErrorInfo(null)
+      setErrorEstado(null)
       setMensaje('')
 
       const respuesta = await api.post(`/cursos/${id}/inscripcion`)
@@ -68,11 +100,20 @@ function CursoDetalle() {
         'Te has inscrito correctamente en el curso.'
       )
     } catch (err) {
-      setError(
-        err.response?.data?.error?.message ||
-        'No se pudo realizar la inscripción.'
-      )
+      if (esSesionExpirada(err)) {
+        cerrarSesion()
+        return
+      }
+
+      if (err?.response?.data?.error?.code === 'ALREADY_ENROLLED') {
+        setInscrito(true)
+        setMensaje(interpretarError(err, 'accion').mensaje)
+        return
+      }
+
+      setErrorInfo(interpretarError(err, 'accion'))
     } finally {
+      inscribiendoRef.current = false
       setInscribiendo(false)
     }
   }
@@ -86,12 +127,16 @@ function CursoDetalle() {
     )
   }
 
-  if (error && !curso) {
+  if (errorInfo && !curso) {
     return (
       <section className="detalle-estado">
         <BookOpen size={40} />
         <h2>No se pudo cargar el curso</h2>
-        <p>{error}</p>
+
+        <ErrorMessage
+          {...errorInfo}
+          onRetry={errorInfo.puedeReintentar ? reintentarCarga : undefined}
+        />
 
         <Link to="/catalogo" className="detalle-volver">
           Volver al catálogo
@@ -145,10 +190,12 @@ function CursoDetalle() {
                 <span>{temario.length} lecciones</span>
               </div>
 
-              <div>
-                <UserRound size={20} />
-                <span>Curso de MiniAula</span>
-              </div>
+              {curso.instructor?.nombre && (
+                <div>
+                  <UserRound size={20} />
+                  <span>Instructor: {curso.instructor.nombre}</span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -156,7 +203,9 @@ function CursoDetalle() {
             <h2>Contenido del curso</h2>
 
             <p>
-              Este es el temario que estudiarás al inscribirte.
+              {inscrito
+                ? 'Este es el temario de tu curso.'
+                : 'Este es el temario que estudiarás al inscribirte.'}
             </p>
 
             <div className="detalle-temario">
@@ -179,7 +228,11 @@ function CursoDetalle() {
                     </span>
                   </div>
 
-                  <Lock size={17} />
+                  {inscrito ? (
+                    <CheckCircle size={17} />
+                  ) : (
+                    <Lock size={17} />
+                  )}
                 </div>
               ))}
             </div>
@@ -194,15 +247,13 @@ function CursoDetalle() {
           <h2>¡Comienza a aprender!</h2>
 
           <p>
-            Inscríbete en este curso para acceder a sus lecciones
-            y comenzar tu aprendizaje.
+            {inscrito
+              ? 'Continúa con tus lecciones desde tus clases.'
+              : 'Inscríbete en este curso para acceder a sus lecciones y comenzar tu aprendizaje.'}
           </p>
 
-          {error && (
-            <div className="detalle-mensaje error">
-              {error}
-            </div>
-          )}
+          <ErrorMessage {...errorInfo} variante="detalle" />
+          <ErrorMessage {...errorEstado} variante="detalle" />
 
           {mensaje && (
             <div className="detalle-mensaje exito">
@@ -219,7 +270,7 @@ function CursoDetalle() {
               </div>
 
               <Link
-                to="/mis-cursos"
+                to={`/mis-cursos/${curso.id}`}
                 className="detalle-boton"
               >
                 Ir a mis clases

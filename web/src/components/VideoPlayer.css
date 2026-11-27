@@ -1,0 +1,54 @@
+.video-reproductor {
+  margin-top: 22px;
+  padding: 18px;
+  border: 1px solid #f0e2ee;
+  border-radius: 16px;
+  background: #fcf9fc;
+}
+
+.video-reproductor-titulo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  color: #a45b9c;
+  font-size: 14px;
+}
+
+.video-reproductor-estado {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  color: #806f89;
+  font-size: 14px;
+}
+
+.video-reproductor-estado p {
+  margin: 0;
+}
+
+.video-reproductor-archivo {
+  display: block;
+  width: 100%;
+  max-height: 420px;
+  border-radius: 12px;
+  background: #493b55;
+}
+
+.video-reproductor-aviso {
+  margin: 12px 0 0;
+  color: #806f89;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .video-reproductor {
+    padding: 14px;
+  }
+
+  .video-reproductor-archivo {
+    max-height: 260px;
+  }
+}

@@ -1,0 +1,156 @@
+.instructor-lecciones {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.instructor-leccion-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #f1e6ef;
+  border-radius: 12px;
+}
+
+.instructor-leccion-numero {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 35px;
+  height: 35px;
+  background: #f8e8f5;
+  border-radius: 10px;
+  color: #a45b9c;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.instructor-leccion-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.instructor-leccion-info h3 {
+  margin: 0 0 4px;
+  color: #493b55;
+  font-size: 14px;
+}
+
+.instructor-leccion-info span {
+  color: #93869a;
+  font-size: 12px;
+}
+
+.instructor-video-indicador {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 8px;
+  color: #a45b9c;
+}
+
+.instructor-leccion-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.instructor-icon-button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  background: #fff;
+  border: 1px solid #eadfea;
+  border-radius: 9px;
+  color: #a45b9c;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.instructor-icon-button:hover {
+  background: #fce9f5;
+}
+
+.instructor-icon-button.peligro {
+  color: #b94b61;
+}
+
+.instructor-icon-button.peligro:hover {
+  background: #fff0f1;
+}
+
+.instructor-icon-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.instructor-menu {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.instructor-menu-desplegable {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 190px;
+  padding: 6px;
+  background: #fff;
+  border: 1px solid #eadfea;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(91, 62, 104, 0.12);
+}
+
+.instructor-menu-opcion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 10px;
+  color: #7b5c85;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.instructor-menu-opcion:hover {
+  background: #fce9f5;
+}
+
+.instructor-menu-opcion.peligro {
+  color: #b94b61;
+}
+
+.instructor-menu-opcion.peligro:hover {
+  background: #fff0f1;
+}
+
+.instructor-menu-opcion:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .instructor-leccion-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .instructor-leccion-acciones {
+    justify-content: flex-start;
+  }
+}

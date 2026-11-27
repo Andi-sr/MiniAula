@@ -92,19 +92,11 @@
   stroke-width: 1.8;
 }
 
-.sidebar-footer {
+.sidebar-logout {
+  display: flex;
+  justify-content: center;
   margin-top: auto;
-  padding: 20px 12px;
-  color: #9b69a5;
-  text-align: center;
-  background: #f9effb;
-  border-radius: 14px;
-}
-
-.sidebar-footer p {
-  margin: 5px 0 0;
-  font-size: 12px;
-  line-height: 1.5;
+  padding: 12px;
 }
 
 /* Contenido principal */
@@ -353,8 +345,20 @@
   }
 
   .brand h2,
-  .menu-label,
-  .sidebar-footer {
+  .menu-label {
+    display: none;
+  }
+
+  .sidebar-logout {
+    padding: 12px 6px;
+  }
+
+  .logout-button {
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  .logout-button span {
     display: none;
   }
 
@@ -429,7 +433,7 @@
   align-items: center;
   justify-content: center;
   gap: 7px;
-  margin-top: 12px;
+  margin-top: 0;
   padding: 8px 12px;
   color: #a45b9c;
   background: #fff;

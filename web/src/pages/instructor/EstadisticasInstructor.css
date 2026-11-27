@@ -1,0 +1,268 @@
+.estadisticas-page .instructor-encabezado {
+  margin-bottom: 24px;
+}
+
+.estadisticas-selector {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+  padding: 18px 20px;
+  border: 1px solid #f1e6ef;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.estadisticas-selector label {
+  color: #806f89;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.estadisticas-selector select {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 14px;
+  border: 1px solid #eadfea;
+  border-radius: 10px;
+  background: #fff;
+  color: #493b55;
+  font: inherit;
+  font-size: 14px;
+}
+
+.estadisticas-selector select:focus-visible {
+  outline: 2px solid #a45b9c;
+  outline-offset: 2px;
+}
+
+.estadisticas-tarjetas {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.estadistica-card {
+  padding: 20px;
+  border: 1px solid #f1e6ef;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(110, 75, 110, 0.05);
+}
+
+.estadistica-card-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  background: #f8e8f5;
+  color: #a45b9c;
+}
+
+.estadistica-card p {
+  margin: 0 0 6px;
+  color: #806f89;
+  font-size: 13px;
+}
+
+.estadistica-card strong {
+  display: block;
+  color: #493b55;
+  font-size: 24px;
+}
+
+.estadistica-card span {
+  display: block;
+  margin-top: 6px;
+  color: #93869a;
+  font-size: 11px;
+}
+
+.estadisticas-aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 17px 19px;
+  margin-bottom: 22px;
+  border-radius: 14px;
+  background: #f9eefa;
+  color: #80608b;
+}
+
+.estadisticas-aviso svg {
+  min-width: 20px;
+  color: #a45b9c;
+}
+
+.estadisticas-aviso strong {
+  color: #493b55;
+}
+
+.estadisticas-aviso p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.estadisticas-seccion {
+  padding: 24px;
+  margin-bottom: 20px;
+  border: 1px solid #f1e6ef;
+  border-radius: 18px;
+  background: #fff;
+}
+
+.estadisticas-seccion-titulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 16px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #f3edf3;
+  color: #a45b9c;
+}
+
+.estadisticas-seccion-titulo h2 {
+  margin: 0;
+  color: #493b55;
+  font-size: 18px;
+}
+
+.estadisticas-seccion-titulo p {
+  margin: 4px 0 0;
+  color: #93869a;
+  font-size: 13px;
+}
+
+.estadisticas-lecciones {
+  display: grid;
+  gap: 16px;
+}
+
+.estadistica-leccion {
+  padding: 14px 16px;
+  border: 1px solid #f3edf3;
+  border-radius: 13px;
+  background: #fff;
+}
+
+.estadistica-leccion.destacada {
+  border-color: #e8cce4;
+  background: #fcf6fb;
+}
+
+.estadistica-leccion-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #493b55;
+  font-size: 13px;
+}
+
+.estadistica-leccion-cabecera strong {
+  color: #a45b9c;
+}
+
+.estadistica-barra {
+  height: 9px;
+  margin: 10px 0 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #f6eef7;
+}
+
+.estadistica-barra span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #f8dff0, #a45b9c);
+}
+
+.estadistica-leccion small {
+  color: #93869a;
+  font-size: 11px;
+}
+
+.estadisticas-disminucion {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 14px 16px;
+  margin-top: 18px;
+  border-radius: 12px;
+  background: #fff0f1;
+  color: #b94b61;
+}
+
+.estadisticas-disminucion p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.estadisticas-resultados {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.estadisticas-resultado {
+  padding: 15px;
+  border-radius: 13px;
+  background: #fcf8fc;
+}
+
+.estadisticas-resultado span {
+  display: block;
+  margin-bottom: 7px;
+  color: #806f89;
+  font-size: 12px;
+}
+
+.estadisticas-resultado strong {
+  color: #493b55;
+  font-size: 20px;
+}
+
+.estadisticas-vacio {
+  margin: 0;
+  padding: 18px;
+  border-radius: 12px;
+  background: #fcf8fc;
+  color: #806f89;
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .estadisticas-tarjetas,
+  .estadisticas-resultados {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .estadisticas-selector {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .estadisticas-tarjetas,
+  .estadisticas-resultados {
+    grid-template-columns: 1fr;
+  }
+
+  .estadisticas-seccion {
+    padding: 18px;
+  }
+
+  .estadistica-leccion-cabecera {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
