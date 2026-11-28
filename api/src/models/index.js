@@ -3,8 +3,9 @@ import Curso from './curso.model.js';
 import Leccion from './leccion.model.js';
 import Inscripcion from './inscripcion.model.js';
 import Progreso from './progreso.model.js';
+import Pregunta from './pregunta.model.js';
 
-// Un instructor puede crear varios cursos.
+// Un instructor puede crear varios cursos
 Usuario.hasMany(Curso, {
   foreignKey: 'instructorId',
   as: 'cursosCreados',
@@ -12,7 +13,7 @@ Usuario.hasMany(Curso, {
   onUpdate: 'CASCADE'
 });
 
-// Cada curso pertenece a un instructor.
+// Cada curso pertenece a un instructor
 Curso.belongsTo(Usuario, {
   foreignKey: 'instructorId',
   as: 'instructor',
@@ -20,7 +21,7 @@ Curso.belongsTo(Usuario, {
   onUpdate: 'CASCADE'
 });
 
-// Un curso contiene varias lecciones.
+// Un curso contiene varias lecciones
 Curso.hasMany(Leccion, {
   foreignKey: 'cursoId',
   as: 'lecciones',
@@ -28,7 +29,7 @@ Curso.hasMany(Leccion, {
   onUpdate: 'CASCADE'
 });
 
-// Cada lección pertenece a un curso.
+// Cada lección pertenece a un curso
 Leccion.belongsTo(Curso, {
   foreignKey: 'cursoId',
   as: 'curso',
@@ -36,6 +37,7 @@ Leccion.belongsTo(Curso, {
   onUpdate: 'CASCADE'
 });
 
+// Un usuario puede tener varias inscripciones
 Usuario.hasMany(Inscripcion, {
   foreignKey: 'usuarioId',
   as: 'inscripciones',
@@ -50,6 +52,7 @@ Inscripcion.belongsTo(Usuario, {
   onUpdate: 'CASCADE'
 });
 
+// Un curso puede tener varias inscripciones
 Curso.hasMany(Inscripcion, {
   foreignKey: 'cursoId',
   as: 'inscripciones',
@@ -64,6 +67,7 @@ Inscripcion.belongsTo(Curso, {
   onUpdate: 'CASCADE'
 });
 
+// Un usuario puede registrar varios progresos
 Usuario.hasMany(Progreso, {
   foreignKey: 'usuarioId',
   as: 'progresos',
@@ -78,6 +82,7 @@ Progreso.belongsTo(Usuario, {
   onUpdate: 'CASCADE'
 });
 
+// Un curso puede tener varios progresos
 Curso.hasMany(Progreso, {
   foreignKey: 'cursoId',
   as: 'progresos',
@@ -92,6 +97,7 @@ Progreso.belongsTo(Curso, {
   onUpdate: 'CASCADE'
 });
 
+// Una lección puede tener varios registros de progreso
 Leccion.hasMany(Progreso, {
   foreignKey: 'leccionId',
   as: 'progresos',
@@ -106,10 +112,27 @@ Progreso.belongsTo(Leccion, {
   onUpdate: 'CASCADE'
 });
 
+// Una lección puede contener varias preguntas
+Leccion.hasMany(Pregunta, {
+  foreignKey: 'leccionId',
+  as: 'preguntas',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE'
+});
+
+// Cada pregunta pertenece a una lección
+Pregunta.belongsTo(Leccion, {
+  foreignKey: 'leccionId',
+  as: 'leccion',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE'
+});
+
 export {
   Usuario,
   Curso,
   Leccion,
   Inscripcion,
-  Progreso
+  Progreso,
+  Pregunta
 };
