@@ -1,4 +1,3 @@
-
 import { Router } from 'express';
 
 import healthRoutes from './health.routes.js';
@@ -9,6 +8,7 @@ import instructorRoutes from './instructor.routes.js';
 import leccionesRoutes from './lecciones.routes.js';
 import inscripcionesRoutes from './inscripciones.routes.js';
 import videosRoutes from './videos.routes.js';
+import cuestionariosRoutes from './cuestionarios.routes.js';
 
 const router = Router();
 
@@ -20,5 +20,6 @@ router.use('/instructor', instructorRoutes);
 router.use('/lecciones', leccionesRoutes);
 router.use('/inscripciones', inscripcionesRoutes);
 router.use('/videos', videosRoutes);
+router.use('/cuestionarios', cuestionariosRoutes);
 
 export default router;
